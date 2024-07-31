@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            margin: 10px 0;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        img {
+            border-radius: 4px;
+        }
+        .pagination {
+            margin-top: 20px;
+        }
+        .step-links a {
+            color: #007bff;
+            text-decoration: none;
+            margin: 0 5px;
+        }
+        .step-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Movie List</h1>
+        <form method="get" action="">
+            <input type="text" name="search" value="{{ search_query }}" placeholder="Search...">
+            <button type="submit">Search</button>
+        </form>
+        <ul>
+            {% for movie in movie_list %}
+                <li>
+                    <a href="{% url 'movie_detail' movie.id %}">
+                        <img src="{{ movie.image.url }}" alt="{{ movie.name }}" width="100">
+                        {{ movie.name }} - {{ movie.duration }} mins - {{ movie.director }}
+                    </a>
+                </li>
+            {% empty %}
+                <li>No movies found.</li>
+            {% endfor %}
+        </ul>
+        <div class="pagination">
+            <span>Page {{ current_page }} of {{ total_pages }}.</span>
+            <div class="step-links">
+                {% if current_page > 1 %}
+                    <a href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}">First</a>
+                    <a href="?page={{ current_page|add:"-1" }}{% if search_query %}&search={{ search_query }}{% endif %}">Previous</a>
+                {% endif %}
+                {% if current_page < total_pages %}
+                    <a href="?page={{ current_page|add:"1" }}{% if search_query %}&search={{ search_query }}{% endif %}">Next</a>
+                    <a href="?page={{ total_pages }}{% if search_query %}&search={{ search_query }}{% endif %}">Last</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
